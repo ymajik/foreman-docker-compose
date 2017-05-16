@@ -4,7 +4,7 @@ production: &default
   database: postgres
   pool: 5
   username: postgres
-  password:
+  password: postgrespostgres
   host: db
 
 test:

@@ -1,4 +1,4 @@
-FROM fedora:latest
+FROM fedora:25
 LABEL MAINTAINER="shlomi@ben-hanna.com"
 RUN dnf -y update
 RUN dnf -y install ruby{,-devel,gems,-irb} rubygem-{nokogiri,bundler,unf_ext,rdoc} git redhat-rpm-config nodejs git postgresql-devel gcc-c++ make hostname
@@ -11,5 +11,5 @@ WORKDIR /usr/src/app
 
 RUN git clone ${REPO_URL} /usr/src/app
 RUN mkdir /usr/src/app/logs
-RUN bundle --without bmc:krb5:libvirt:puppet_proxy_legacy:test:windows 
+RUN bundle --without bmc:krb5:libvirt:puppet_proxy_legacy:test:windows
 ADD settings.yml config/settings.yml

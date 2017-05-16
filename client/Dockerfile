@@ -1,4 +1,4 @@
-FROM fedora:latest
+FROM fedora:25
 LABEL MAINTAINER="ohadlevy@gmail.com"
 #RUN dnf -y upgrade
 RUN dnf install -y hostname facter

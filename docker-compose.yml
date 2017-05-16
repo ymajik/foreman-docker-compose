@@ -1,15 +1,22 @@
 version: '2'
+networks:
+  default:
+    external:
+      name: docker2
 services:
   memcache:
     image: memcached
+    container_name: foreman_memcached
   db:
     image: postgres:9.5
+    container_name: foreman_postgres
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - ./pgdata:/var/lib/postgresql/data/pgdata:z
   foreman:
     build: foreman
+    container_name: foreman_server
     command: rails server -p 80 -b 0.0.0.0
     ports:
       - 80
@@ -22,6 +29,7 @@ services:
       - proxy
   haproxy:
     image: dockercloud/haproxy
+    container_name: foreman_haproxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     links:
@@ -31,15 +39,16 @@ services:
       - 1936:1936
   proxy:
     build: proxy
+    container_name: foreman_smartproxy
     command: /usr/src/app/bin/smart-proxy
     ports:
       - 8000:8000
-  client:
-    build: client
-    environment:
-      - FOREMAN_URL=http://haproxy
-    depends_on:
-      - haproxy
+  # client:
+  #   build: client
+  #   environment:
+  #     - FOREMAN_URL=http://haproxy
+  #   depends_on:
+  #     - haproxy
   foreman-init:
     build: foreman
     command: bundle exec rake db:migrate db:seed assets:clean assets:precompile webpack:compile apipie:cache:index
